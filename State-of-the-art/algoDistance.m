@@ -1,5 +1,5 @@
-function [distance] = algoDistance(data)
-%Usage: [distance] = algoDistance(data)
+function [distance] = Ahmad(data)
+%Usage: [distance] = Ahmad(data)
 %Reference: Amir Ahmad, Lipika Dey. 'A method to compute distance between
 %two categorical values of same attribute in unsupervised learning for
 %categorical data set', Pattern Recognition Letters. 28(2007):110-118
