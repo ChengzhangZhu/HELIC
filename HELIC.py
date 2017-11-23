@@ -113,10 +113,8 @@ def HMLHC(data, label, dataName = None, kernelPara = {'Guassian': [0.1, 1, 10] ,
 #dataList = ['zoo', 'DNAPromoter', 'hayesroth', 'audiology', 'housevotes', 'spect', 'mofn3710', 'monks3', 'threeOf9', 'balance','crx','mammographic','flare','titanic','DNAnominal', 'splice', 'krvskp', 'led24', 'mushroom', 'krkopt', 'adult', 'connect4', 'census']
 dataList = ['soybeanlarge']
 for dataName in dataList:
-#    dataName = 'soybeanlarge'
-    #for matlab data
+
     try:
-#        dataName = 'hayesroth'
         #for matlab data
         filename = '/data/chezhu/Documents/MATLAB/Coupled Nominal Data for Kernel Learning - v17 non-IID Categorical Data Embedding/Datasets/' + dataName + '.mat'
         data, label = fc.readMatlabData(filename)
@@ -133,14 +131,6 @@ for dataName in dataList:
     print('Data Size', len(label))
     ##split the train and test dataset
     para = np.r_[-5:6]
-    
-    ###for test
-    #HCSpace = HC(data, label)
-    #kernelPara = {'Guassian': [2**int(i) for i in para]}
-    #KernelSpace = KernelMapping(HCSpace, kernelPara)
-    
-    ##write down results
-    #pickle.dump((embed_data,label),open(dataName + '_embed.data', 'wb'))
     splitNum = 20
     index = 0
     num_steps = 1000
@@ -154,14 +144,8 @@ for dataName in dataList:
     
             embed_train, W, KernelSpace = HMLHC(X_train, y_train, dataName, lr = 1e-3, batch_size=20, num_steps = num_steps, kernelPara = kernelPara)
             embed_test = fc.generate_kernelVector(X_test, KernelSpace, W, reduce = True)
-        
-        #    embed_train, embed_test, y_train, y_test = embed_data[train], embed_data[test], label[train], label[test]
-        #        para = np.r_[-5:6]
-        #        embed_train, W, KernelSpace = HMLHC(X_train, y_train, lr = 1e-2, batch_size=20, num_steps = 200, kernelPara = {'Guassian': [2**int(i) for i in para]})
-        #        embed_test = fc.generate_kernelVector(X_test, KernelSpace, W)
             neigh = KNeighborsClassifier(n_neighbors = 1)
             neigh.fit(embed_train,y_train[:,0])
-        #    resKNN[index] = neigh.score(embed_test, y_test[:,0])
             resKNN[index] = f1_score(y_test[:,0], neigh.predict(embed_test), average = 'macro')
             print('the',index,'-th parts KNN accuracy on dataset', dataName,'is:',resKNN[index])
             log = [dataName, str(resKNN[index]), kernelPara,num_steps]
